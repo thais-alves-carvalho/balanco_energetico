@@ -35,7 +35,7 @@ def aggregate(df: pd.DataFrame, freq: str) -> pd.DataFrame:
     dfx = df.set_index('din_instante')
 
     if freq == 'Hora':
-        rule = 'H'
+        rule = 'h'
     elif freq == 'Dia':
         rule = 'D'
     elif freq == 'Mês':
@@ -43,7 +43,7 @@ def aggregate(df: pd.DataFrame, freq: str) -> pd.DataFrame:
     elif freq == 'Ano':
         rule = 'YS'
     else:
-        rule = 'H'
+        rule = 'h'
 
     out = (
         dfx
@@ -110,6 +110,10 @@ agg = aggregate(filtered, agg_level)
 # Renomeia para exibição
 agg = agg.rename(columns={'din_instante':'instante'})
 
+
+st.write("Agregação atual:", agg_level)
+st.write("Linhas agregadas:", len(agg))
+
 # Gráfico: Carga média
 fig_mean = px.line(
     agg,
@@ -137,9 +141,9 @@ fig_max.update_layout(legend_title_text='Subsistema')
 # Layout
 col1, col2 = st.columns(2)
 with col1:
-    st.plotly_chart(fig_mean, use_container_width=True)
+    st.plotly_chart(fig_mean, use_container_width=True,key=f"fig_mean_{agg_level}")
 with col2:
-    st.plotly_chart(fig_max, use_container_width=True)
+    st.plotly_chart(fig_max, use_container_width=True,key=f"fig_max_{agg_level}")
 
 with st.expander("Ver tabela agregada"):
     st.dataframe(agg, use_container_width=True)
